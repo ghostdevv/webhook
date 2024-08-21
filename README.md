@@ -29,3 +29,21 @@ curl -X POST -d '{"$title": "Hello World"}' https://your-instance
 ```
 
 ![](https://i.imgur.com/ehxffP1.png)
+
+## Hosting
+
+This is designed to run on Cloudflare workers. To self-host it make sure you have [`pnpm`](https://pnpm.io/) and [`node`](https://nodejs.org/) installed, and then clone the repo.
+
+You'll first need to add the secret `HOOK_URL`, this can be done by running:
+
+```bash
+pnpm wrangler secret put HOOK_URL
+```
+
+Next you can deploy the worker:
+
+```bash
+pnpm run deploy
+```
+
+Finally, you can view the worker and add a custom domain on the [Cloudflare dashboard](https://dash.cloudflare.com?to=/:account/workers/services/view/webhook).
