@@ -11,8 +11,36 @@ function reply(code: number, message: string) {
 
 type JSON = string | number | boolean | null | { [key: string]: JSON } | JSON[];
 
-function isRecord(value: JSON): value is { [key: string]: JSON } {
-	return typeof value === 'object' && value !== null && !Array.isArray(value);
+async function parseBody(request: Request) {
+	const data = await request.json<JSON>().catch(() => null);
+
+	if (typeof data != 'object' || data == null) {
+		return null;
+	}
+
+	const dataArray = Array.isArray(data) ? data : [data];
+
+	return dataArray.filter(
+		(item): item is { [key: string]: JSON } =>
+			typeof item == 'object' && item != null && !Array.isArray(item),
+	);
+}
+
+interface EmbedField {
+	name: string;
+	value: string;
+	inline?: boolean;
+}
+
+interface Embed {
+	// description?: string;
+	// timestamp?: string;
+	// url?: string;
+	// footer?: string;
+	author?: string;
+	title?: string;
+	color?: number;
+	fields: EmbedField[];
 }
 
 export default {
@@ -27,34 +55,41 @@ export default {
 			return reply(404, 'Not found');
 		}
 
-		const data = await request.json<JSON>().catch(() => null);
+		const data = await parseBody(request);
 
-		if (!isRecord(data)) {
-			return reply(400, 'Body is required and must be an object');
+		if (!data) {
+			return reply(400, 'A valid object/array body is required');
 		}
 
-		const fields = Object.entries(data)
-			.filter(([key]) => !key.startsWith('$'))
-			.map(([key, value]) => ({
-				name: `${key}`,
-				value: `${value}`,
-				inline: true,
-			}));
-
-		const hexColour =
-			typeof data['$colour'] == 'string' ? data['$colour'] : '#2160ec';
+		const embeds = data.map(
+			(data): Embed => ({
+				title:
+					typeof data['$title'] == 'string'
+						? data['$title']
+						: 'New Webhook',
+				color: parseInt(
+					typeof data['$colour'] == 'string'
+						? data['$colour'].slice(1)
+						: '2160ec',
+					16,
+				),
+				fields: Object.entries(data)
+					.filter(([key]) => !key.startsWith('$'))
+					.map(
+						([key, value]): EmbedField => ({
+							name: `${key}`,
+							value: `${value}`,
+							inline: true,
+						}),
+					),
+			}),
+		);
 
 		await fetch(env.HOOK_URL, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				embeds: [
-					{
-						color: parseInt(hexColour.slice(1), 16),
-						title: data['$title'] ?? 'New Webhook',
-						fields,
-					},
-				],
+				embeds,
 			}),
 		});
 

@@ -2,7 +2,9 @@
 
 A simple proxy that sends webhooks it recieves to Discord. It takes in a plain `Record<string, string | number | boolean>` like record to make sending simple.
 
-## Simple Request
+## Send an embed
+
+You can send your plain object (or an array of objects for multiple embeds), and it'll send it as an embed. All keys are stringified so you can't send nested objects.
 
 ```bash
 curl -X POST -d '{"hello": "world"}' https://your-instance
