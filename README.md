@@ -10,7 +10,7 @@ You can send your plain object (or an array of objects for multiple embeds), and
 curl -X POST -d '{"hello": "world"}' https://your-instance
 ```
 
-![](https://i.imgur.com/gzEMefc.png)
+![](./.github/images/single-embed.png)
 
 ## Special Fields
 
@@ -22,7 +22,7 @@ Keys that start wth `$` might have a special behaviour, and are all reserved for
 curl -X POST -d '{"$colour": "#f96743"}' https://your-instance
 ```
 
-![](https://i.imgur.com/yoTYnT7.png)
+![](./.github/images/coloured-embed.png)
 
 ### `$title`
 
@@ -30,22 +30,26 @@ curl -X POST -d '{"$colour": "#f96743"}' https://your-instance
 curl -X POST -d '{"$title": "Hello World"}' https://your-instance
 ```
 
-![](https://i.imgur.com/ehxffP1.png)
+![](./.github/images/custom-title-embed.png)
 
 ## Hosting
 
 This is designed to run on Cloudflare workers. To self-host it make sure you have [`pnpm`](https://pnpm.io/) and [`node`](https://nodejs.org/) installed, and then clone the repo.
 
-You'll first need to add the secret `HOOK_URL`, this can be done by running:
+1. Add your account to the [`wrangler.toml`](./wrangler.toml) file. You can find this in the URL of the Cloudflare dashboard.
+
+![account id in the cloudflare dash url](./.github/images/account-id.png)
+
+2. Next you need to add your `HOOK_URL` secret you got from Discord, this can be done by running:
 
 ```bash
 pnpm wrangler secret put HOOK_URL
 ```
 
-Next you can deploy the worker:
+3. Now you can deploy the worker:
 
 ```bash
 pnpm run deploy
 ```
 
-Finally, you can view the worker and add a custom domain on the [Cloudflare dashboard](https://dash.cloudflare.com?to=/:account/workers/services/view/webhook).
+4. Finally, you can view the worker and add a custom domain on the [Cloudflare dashboard](https://dash.cloudflare.com?to=/:account/workers/services/view/webhook).
