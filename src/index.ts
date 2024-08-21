@@ -58,8 +58,6 @@ export default {
 			}),
 		});
 
-		return new Response('Sent', {
-			status: 200,
-		});
+		return reply(200, 'Sent!');
 	},
 };
