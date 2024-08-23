@@ -33,10 +33,10 @@ interface EmbedField {
 }
 
 interface Embed {
-	// description?: string;
 	// timestamp?: string;
 	// url?: string;
 	// footer?: string;
+	description?: string;
 	author?: string;
 	title?: string;
 	color?: number;
@@ -67,6 +67,10 @@ export default {
 					typeof data['$title'] == 'string'
 						? data['$title']
 						: 'New Webhook',
+				description:
+					typeof data['$description'] == 'string'
+						? data['$description']
+						: undefined,
 				color: parseInt(
 					typeof data['$colour'] == 'string'
 						? data['$colour'].slice(1)

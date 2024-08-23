@@ -32,6 +32,14 @@ curl -X POST -d '{"$title": "Hello World"}' https://your-instance
 
 ![](./.github/images/custom-title-embed.png)
 
+### `$description`
+
+```bash
+curl -X POST -d '{"$description": "Hello World"}' https://your-instance
+```
+
+![](./.github/images/custom-description-embed.png)
+
 ## Hosting
 
 This is designed to run on Cloudflare workers. To self-host it make sure you have [`pnpm`](https://pnpm.io/) and [`node`](https://nodejs.org/) installed, and then clone the repo.
